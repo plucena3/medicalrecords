@@ -5,7 +5,8 @@ patient 0xf2F830C0fc4351440281f7c62a2CDBddfC2938a5
 and PKs available on .env file
 create integration test for EncryptedMedicalRecords smart contract on Testnet 
 using coti-ethers for encryption everywhere its needed
-
+consider this example 
+https://docs.coti.io/coti-documentation/build-on-coti/guides/sending-a-transaction-with-encrypted-inputs
 
 install solhint
 % will do lots of configs for us
