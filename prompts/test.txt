@@ -1,0 +1,2 @@
+install solhint
+% will do lots of configs for us
