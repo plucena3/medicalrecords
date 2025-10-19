@@ -46,7 +46,7 @@ The contract uses five key mappings to manage data storage and access control:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                        ENCRYPTED MEDICAL RECORDS MAPPINGS                      │
+│                        ENCRYPTED MEDICAL RECORDS MAPPINGS                       │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
@@ -83,20 +83,20 @@ The contract uses five key mappings to manage data storage and access control:
 │     Patient → RecordID → Record     │                          │             │
 │                                     │                          │             │
 │ 0x123... → 0 → {                    │          ┌───────────────▼─────────────▼──┐
-│   examName: "Blood Test"            │          │     _doctorAuthorizations       │
-│   examValue: ctUint64 (encrypted)   │          │   Patient → Doctor → Boolean    │
-│   timestamp: 1729234567             │          │                                 │
+│   examName: "Blood Test"            │          │     _doctorAuthorizations      │
+│   examValue: ctUint64 (encrypted)   │          │   Patient → Doctor → Boolean   │
+│   timestamp: 1729234567             │          │                                │
 │   patient: 0x123...                 │          │ 0x123... → 0x789... → true     │
 │   doctor: 0x789...          ◄───────┼──────────│ 0x123... → 0xABC... → false    │
 │   isActive: true                    │          │ 0x456... → 0x789... → true     │
-│ }                                   │          │                                 │
-│                                     │          │ (Patient authorizes doctors     │
+│ }                                   │          │                                │
+│                                     │          │ (Patient authorizes doctors    │
 │ 0x123... → 1 → { ... }              │          │  to access their records)      │
-│ 0x123... → 2 → { ... }              │          └─────────────────────────────────┘
-└─────────────────────────────────────┘                          │
+│ 0x123... → 2 → { ... }              │          └────────────────────────────────┘
+└─────────────────────────────────────┘                           │
                                                                   │
 ┌─────────────────────────────────────────────────────────────────┼─────────────┐
-│                            DATA FLOW                           │             │
+│                            DATA FLOW                            │             │
 └─────────────────────────────────────────────────────────────────┼─────────────┘
                                                                   │
 1. Admin registers doctor → _doctors[doctorAddr] = DoctorInfo     │
@@ -105,13 +105,13 @@ The contract uses five key mappings to manage data storage and access control:
 4. Doctor/Patient accesses → Check authorizations → Return encrypted data
 
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              ACCESS PATTERNS                                   │
+│                              ACCESS PATTERNS                                    │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 PATIENT ACCESS:                          DOCTOR ACCESS:
 ┌─────────────┐                         ┌─────────────┐
 │   Patient   │                         │   Doctor    │
-│  (msg.sender)│                        │ (msg.sender) │
+│  (msg.sender)│                        │ (msg.sender)│
 └─────────────┘                         └─────────────┘
       │                                       │
       ▼                                       ▼
@@ -121,17 +121,17 @@ PATIENT ACCESS:                          DOCTOR ACCESS:
 └─────────────┘                         │.isVerified  │
       │                                 └─────────────┘
       ▼                                       │
-┌─────────────┐                              ▼
-│_patientRecords                       ┌─────────────┐
-│[patient][id]│                       │_doctorAuthorizations
-└─────────────┘                       │[patient][doctor]
-      │                               └─────────────┘
+┌────────────────┐                               ▼
+│_patientRecords │                    ┌──────────────────────┐
+│[patient][id]   │                    │_doctorAuthorizations │ 
+└────────────────┘                    │[patient][doctor]     │
+      │                               └──────────────────────┘
       ▼                                      │
-┌─────────────┐                             ▼
-│   Return    │                       ┌─────────────┐
-│ Encrypted   │                       │_patientRecords
-│   Value     │                       │[patient][id]│
-└─────────────┘                       └─────────────┘
+┌─────────────┐                              ▼
+│   Return    │                       ┌───────────────┐
+│ Encrypted   │                       │_patientRecords│
+│   Value     │                       │[patient][id]  │
+└─────────────┘                       └───────────────┘
                                             │
                                             ▼
                                       ┌─────────────┐
